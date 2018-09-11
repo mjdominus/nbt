@@ -34,14 +34,18 @@ cmap = [(32,32,32),                # UNKNOWN
         ]
 
 
+shade_frac = [180/255, 220/255, 1, 135/255]
 
 histo = [0] * 256
 for c in colors:
+    shade = c % 4
     c = int(c/4)
     histo[c] += 1
-    col = cmap[c]
-    if col is None: col = (c, c, c)          # gray
-#    print(c)
+    base_col = cmap[c]
+    if base_col is None:
+        col = (c, c, c)          # gray
+    else:
+        col = [ int(x * shade_frac[shade]) for x in base_col ]
     sys.stdout.buffer.write(struct.pack(">BBB", *col))
 
 for i in range(256):
