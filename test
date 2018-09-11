@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+
+from nbt import nbt
+from sys import argv
+
+if len(argv) < 2: file = "tiny.nbt"
+else: file = argv[1]
+
+f = nbt(file=file, verbose=True)
+
+print(f.contents)
