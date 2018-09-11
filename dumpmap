@@ -1,0 +1,52 @@
+#!/usr/bin/python3
+
+from nbt import nbt
+import struct
+import sys
+from sys import argv
+
+if len(argv) < 2: raise Exception("Usage: dumpmap [decompressed map file]")
+else: file = argv[1]
+
+f = nbt(file=file).contents
+colors = f["data"]["data"]["colors"]
+if len(colors) != 16384:
+    raise Exception("Unexpected length %d" % len(colors))
+
+sys.stdout.buffer.write(b'P6\n128 128\n255\n')
+
+cmap = [(32,32,32),                # UNKNOWN
+        (127,178,56),           # GRASS
+        (247,233,163),          # SAND
+        (199,199,199),          # CLOTH
+        (255, 0, 0),            # TNT
+        (160, 160, 255),        # ICE     5
+        (167, 167, 167),        # IRON
+        (0, 124, 0),            # FOLIAGE
+        (255, 255, 255),        # SNOW
+        (164, 168, 184),        # CLAY
+        (151, 109, 77),         # DIRT    10
+        (112, 112, 112),        # STONE
+        (64, 64, 255),          # WATER
+        (143, 119, 72),         # WOOD
+
+        *([None] * 255)
+        ]
+
+
+
+histo = [0] * 256
+for c in colors:
+    c = int(c/4)
+    histo[c] += 1
+    col = cmap[c]
+    if col is None: col = (c, c, c)          # gray
+#    print(c)
+    sys.stdout.buffer.write(struct.pack(">BBB", *col))
+
+for i in range(256):
+    if histo[i] > 0:
+        print("%d: %d" % (i, histo[i]), file=sys.stderr)
+
+    
+    
