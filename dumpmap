@@ -2,17 +2,10 @@
 
 from nbt import nbt
 import sys
-from sys import argv
+from sys import argv, stderr
 from pixmap import pixmap
 
-if len(argv) < 2: raise Exception("Usage: dumpmap [decompressed map file]")
-else: file = argv[1]
-
-f = nbt(file=file).contents
-colors = f["data"]["data"]["colors"]
-if len(colors) != 16384:
-    raise Exception("Unexpected length %d" % len(colors))
-pm = pixmap()
+if len(argv) < 2: raise Exception("Usage: dumpmap decompressed-map-files...")
 
 cmap = [(32,32,32),                # UNKNOWN
         (127,178,56),           # GRASS
@@ -35,22 +28,40 @@ cmap = [(32,32,32),                # UNKNOWN
 
 shade_frac = [180/255, 220/255, 1, 135/255]
 
-histo = [0] * 256
-y = 0
-x = 0
-for c in colors:
-    shade = c % 4
-    c = int(c/4)
-    histo[c] += 1
-    base_col = cmap[c]
-    if base_col is None:
-        col = (c, c, c)          # gray
-    else:
-        col = [ int(x * shade_frac[shade]) for x in base_col ]
-    pm.set(x, y, col)
-    x += 1
-    if x == 128:
-        x = 0
-        y += 1
+pm = pixmap()
+
+scale_factor = [1, 2, 4, 8, 16]
+
+for filename in argv[1:]:
+    f = nbt(file=filename).contents
+
+    scale = scale_factor[int(f["data"]["data"]["scale"])]
+    xc = f["data"]["data"]["xCenter"]
+    zc = f["data"]["data"]["zCenter"]
+    print(f'map {filename}: ({xc},{zc}) scale {scale}', file=stderr)
+    
+    colors = f["data"]["data"]["colors"]
+    if len(colors) != 16384:
+        raise Exception("File %s: Unexpected length %d" %
+                        (filename, len(colors)))
+
+
+    y = -64
+    x = -64
+    for c in colors:
+        shade = c % 4
+        c = int(c/4)
+        base_col = cmap[c]
+        if c == 0 or base_col is None:
+            pass
+        else:
+            col = [ int(x * shade_frac[shade]) for x in base_col ]
+            for i in range(scale):
+                for j in range(scale):
+                    pm.set(x * scale + xc + i, y * scale + zc + j, col)
+        x += 1
+        if x == 64:
+            x = -64
+            y += 1
 
 pm.dump_ppm(sys.stdout)
