@@ -2,13 +2,12 @@
 
 import struct
 from sys import stderr
+from math import inf
 
 class pixmap():
     def __init__(self, default_pixel=(127,127,127)):
-        self.xmin = None
-        self.xmax = None
-        self.ymin = None
-        self.ymax = None
+        self.xmin = self.ymin =  inf
+        self.xmax = self.ymax = -inf
         self.default_pixel = default_pixel
         self.p = {}
 
@@ -17,7 +16,7 @@ class pixmap():
         
     def set(self, x, y, color):
 #        print(f'set({x},{y}) = {color}', file=stderr)
-        self.p[self.key(x,y)] = color
+        self.p[self.key(x, y)] = color
         self.adjust_bounds(x, y)
 
     def get(self, x, y):
@@ -28,10 +27,10 @@ class pixmap():
             return self.default_pixel
 
     def adjust_bounds(self, x, y):
-        if self.xmin is None or x < self.xmin: self.xmin = x
-        if self.xmax is None or x > self.xmax: self.xmax = x
-        if self.ymin is None or y < self.ymin: self.ymin = y
-        if self.ymax is None or y > self.ymax: self.ymax = y
+        if x < self.xmin: self.xmin = x
+        if x > self.xmax: self.xmax = x
+        if y < self.ymin: self.ymin = y
+        if y > self.ymax: self.ymax = y
 
     def loop(self, callback):
         for y in range(self.ymin, self.ymax+1):
@@ -47,6 +46,7 @@ class pixmap():
     def dump_ppm(self, fh):
 #        print(f'x from {self.xmin} to {self.xmax}', file=stderr)
 #        print(f'y from {self.ymin} to {self.ymax}', file=stderr)
+#        print(f' total pixels: {self.rows() * self.columns()}', file=stderr)
         print(f'P6\n{self.columns()} {self.rows()}\n255\n',
               file=fh, end="")
         fh.flush()

@@ -1,12 +1,11 @@
 #!/usr/bin/python3
-from nbt import nbt
 
+from nbt import nbt
 from sys import argv
 
 def dump(f, depth=0, prefix="| "):
-    i = prefix * depth
     for k, v in f.items():
-        print(f'{prefix * depth}{k}:', end=" ")
+        print(prefix * depth + k + ": ", end="")
         recurse = False
         try:
             v.items()
@@ -15,10 +14,10 @@ def dump(f, depth=0, prefix="| "):
             pass
         if recurse:
             print('')
-            dump(v, depth+1)
+            dump(v, depth+1, prefix=prefix)
         else:
             if len(str(v)) < 100:
-                print(f'{v}')
+                print(str(v))
             else:
                 print(f'<{len(str(v))} bytes data>')
             

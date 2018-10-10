@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from nbt import nbt
 
+from nbt import nbt
 from sys import argv
 
 items = []
@@ -9,7 +9,6 @@ for filename in argv[1:]:
   scale = int(f["data"]["data"]["scale"])
   items.append([scale, filename])
 
-def elt0(x): return x[0]
 items.sort(key=lambda x: x[0], reverse=True)
 for i in items: print(i[1])
 
