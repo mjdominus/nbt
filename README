@@ -18,3 +18,4 @@ To use:
      dumpmap $(sortbyscale map-files....) | pnmtopng > big-map.png
 
 
+Blog post about this project:  https://blog.plover.com/games/minecraft-maps.html
