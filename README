@@ -12,6 +12,9 @@ Details:
 To use:
   1. Copy map(s) from  MINECRAFT/saves/WORLD/data/map_*.dat
   2. Uncompress: gzip -dc map_123.dat > map_123.nbt
-  3. Convert to pnm: dumpmap map_123.nbt > map_123.pnm
+  3. Convert one map to pnm: dumpmap map_123.nbt > map_123.pnm
      Or to png: dumpmap map_123.nbt | pnmtopng > map_123.pnm
+  4. Join many maps and convert:
+     dumpmap $(sortbyscale map-files....) | pnmtopng > big-map.png
+
 
