@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 from nbt import nbt
-import struct
 import sys
 from sys import argv
+from pixmap import pixmap
 
 if len(argv) < 2: raise Exception("Usage: dumpmap [decompressed map file]")
 else: file = argv[1]
@@ -12,8 +12,7 @@ f = nbt(file=file).contents
 colors = f["data"]["data"]["colors"]
 if len(colors) != 16384:
     raise Exception("Unexpected length %d" % len(colors))
-
-sys.stdout.buffer.write(b'P6\n128 128\n255\n')
+pm = pixmap()
 
 cmap = [(32,32,32),                # UNKNOWN
         (127,178,56),           # GRASS
@@ -37,6 +36,8 @@ cmap = [(32,32,32),                # UNKNOWN
 shade_frac = [180/255, 220/255, 1, 135/255]
 
 histo = [0] * 256
+y = 0
+x = 0
 for c in colors:
     shade = c % 4
     c = int(c/4)
@@ -46,11 +47,10 @@ for c in colors:
         col = (c, c, c)          # gray
     else:
         col = [ int(x * shade_frac[shade]) for x in base_col ]
-    sys.stdout.buffer.write(struct.pack(">BBB", *col))
+    pm.set(x, y, col)
+    x += 1
+    if x == 128:
+        x = 0
+        y += 1
 
-for i in range(256):
-    if histo[i] > 0:
-        print("%d: %d" % (i, histo[i]), file=sys.stderr)
-
-    
-    
+pm.dump_ppm(sys.stdout)
