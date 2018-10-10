@@ -45,7 +45,9 @@ class pixmap():
         return self.ymax - self.ymin + 1
 
     def dump_ppm(self, fh):
-        print(f'P6\n{self.rows()} {self.columns()}\n255\n',
+#        print(f'x from {self.xmin} to {self.xmax}', file=stderr)
+#        print(f'y from {self.ymin} to {self.ymax}', file=stderr)
+        print(f'P6\n{self.columns()} {self.rows()}\n255\n',
               file=fh, end="")
         fh.flush()
         self.loop(lambda x, y, pix:
