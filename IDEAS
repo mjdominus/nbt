@@ -1,0 +1,4 @@
+
+Maps have scale and position data in them.  So it wouldn't be hard to
+write a program that would take a directory full of maps (like in
+maps/ here) and stitch them together into a single map.
