@@ -5,10 +5,10 @@ from sys import stderr
 
 class pixmap():
     def __init__(self, default_pixel=(127,127,127)):
-        self.xmin = 0
-        self.xmax = 0
-        self.ymin = 0
-        self.ymax = 0
+        self.xmin = None
+        self.xmax = None
+        self.ymin = None
+        self.ymax = None
         self.default_pixel = default_pixel
         self.p = {}
 
@@ -28,10 +28,10 @@ class pixmap():
             return self.default_pixel
 
     def adjust_bounds(self, x, y):
-        if x < self.xmin: self.xmin = x
-        if x > self.xmax: self.xmax = x
-        if y < self.ymin: self.ymin = y
-        if y > self.ymax: self.ymax = y
+        if self.xmin is None or x < self.xmin: self.xmin = x
+        if self.xmax is None or x > self.xmax: self.xmax = x
+        if self.ymin is None or y < self.ymin: self.ymin = y
+        if self.ymax is None or y > self.ymax: self.ymax = y
 
     def loop(self, callback):
         for y in range(self.ymin, self.ymax+1):
