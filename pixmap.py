@@ -47,6 +47,9 @@ class pixmap():
 #        print(f'x from {self.xmin} to {self.xmax}', file=stderr)
 #        print(f'y from {self.ymin} to {self.ymax}', file=stderr)
 #        print(f' total pixels: {self.rows() * self.columns()}', file=stderr)
+        if self.xmin == inf:
+            print("Empty canvas", file=stderr)
+            return
         print(f'P6\n{self.columns()} {self.rows()}\n255\n',
               file=fh, end="")
         fh.flush()
