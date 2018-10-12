@@ -1,0 +1,20 @@
+
+* Maps have scale and position data in them.  So it wouldn't be hard to
+  write a program that would take a directory full of maps (like in
+  maps/ here) and stitch them together into a single map.
+
+  o So far so good!  Now, sort the input maps in order of decreasing
+    scale so that high-resolution patches are not overwritten by
+    low-resolution patches
+
+o The banner data is in there; you could easily put the banners on the
+  map.  Similarly "frames".
+
+o Maybe an external file with user-defined list of landmarks
+
+o Maybe a command-line flag to show the boundaries of each of the
+  maps?  Maybe annotate each map with its number?
+
+o Sometimes you have two maps that cover the exact same
+  territory. Only the newest one should be rendered.
+
