@@ -6,15 +6,12 @@ from sys import argv
 def dump(f, depth=0, prefix="| "):
     for k, v in f.items():
         print(prefix * depth + k + ": ", end="")
-        recurse = False
-        try:
-            v.items()
-            recurse = True
-        except AttributeError:
-            pass
-        if recurse:
+        if hasattr(v, "items"):
             print('')
-            dump(v, depth+1, prefix=prefix)
+            dump(v, depth+1, prefix)
+        elif isinstance(v, list):
+            print('')
+            dump(dict([(str(i), v[i]) for i in range(len(v))]), depth+1, prefix)
         else:
             if len(str(v)) < 100:
                 print(str(v))
