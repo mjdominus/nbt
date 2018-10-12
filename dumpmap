@@ -21,8 +21,6 @@ cmap = [(32,32,32),                # UNKNOWN
         (112, 112, 112),        # STONE
         (64, 64, 255),          # WATER
         (143, 119, 72),         # WOOD
-
-        *([None] * 255)
         ]
 
 
@@ -47,12 +45,19 @@ for filename in argv[1:]:
                         (filename, len(colors)))
 
 
+    missing_colors = set()
+
     y = -64
     x = -64
     for c in colors:
         shade = c % 4
         c = int(c/4)
-        base_col = cmap[c]
+        if c in range(len(cmap)):
+            base_col = cmap[c]
+        else:
+            missing_colors.add(c)
+            base_col = None
+
         if c == 0 or base_col is None:
             pass
         else:
@@ -66,3 +71,6 @@ for filename in argv[1:]:
             y += 1
 
 pm.dump_ppm(sys.stdout)
+if missing_colors:
+    print(f'Indices missing from colors table: {missing_colors}', file=stderr)
+
