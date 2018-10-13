@@ -12,9 +12,32 @@ o The banner data is in there; you could easily put the banners on the
 
 o Maybe an external file with user-defined list of landmarks
 
-o Maybe a command-line flag to show the boundaries of each of the
-  maps?  Maybe annotate each map with its number?
+* Maybe a command-line flag to show the boundaries of each of the
+  maps?
+
+o Maybe annotate each map with its number?
+
+  How to position the annotations though? Wherever you put them they
+  might obscure something important.  Also, unless you put each one in
+  the center of its map, they might overlap.
+
+  Idea: instead of painting them on in some fixed color, paint them on
+  by desaturating the pixels under the labels.
 
 o Sometimes you have two maps that cover the exact same
   territory. Only the newest one should be rendered.
+
+o Treasure maps mess up the output.  You need to identify them somehow
+  and omit them, or maybe use them only as a last resort.  How to
+  identify them?
+
+o Today you had a treasure map that was like a million miles from
+  everything else, and the resulting composite map had to be enormous
+  to include it.  It took four and a half minutes to write out the
+  300-megapixel image.  Some sort of warning would be good here.  But
+  when should it be issued?
+
+  Maybe if the resulting canvas has low density (easy to measure:
+  (len(canvas) ÷ (xsize  * ysize)) look for weird outliers?
+
 

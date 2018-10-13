@@ -11,6 +11,7 @@ def argparser():
     parser.add_argument('--verbose', action='store_true')
     parser.add_argument('-d', '--default-color', help="Color for unvisited areas in the form RGB or RRGGBB (default: gray)", default="808080")
     parser.add_argument('mapfiles', nargs='+', help="files containing *uncompressed* nbt data")
+    parser.add_argument('-b', '--borders', action='store_true', help="draw borders around map fragments")
     return parser
 
 def interpret_color(s):
@@ -78,6 +79,7 @@ for filename in args.mapfiles:
     y = -64
     x = -64
     for c in colors:
+
         shade = c % 4
         c = int(c/4)
         if c in cmap:
@@ -89,9 +91,15 @@ for filename in args.mapfiles:
         if c == 0 or base_col is None:
             pass
         else:
-            col = [ int(x * shade_frac[shade]) for x in base_col ]
+            pixel_color = [ int(component * shade_frac[shade]) for component in base_col ]
             for i in range(scale):
                 for j in range(scale):
+                    col = pixel_color
+                    if args.borders:
+                        if x == -64 and i == 0 or x == 63 and i == scale-1:
+                            col = (0,0,0)
+                        elif y == -64 and j == 0 or y == 63 and j == scale-1:
+                            col = (0,0,0)
                     pm.set(x * scale + xc + i, y * scale + zc + j, col)
         x += 1
         if x == 64:
