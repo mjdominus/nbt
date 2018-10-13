@@ -46,12 +46,13 @@ colors=[(32,32,32),                # UNKNOWN
         
 ]
 cmap = dict([ (i, colors[i]) for i in range(len(colors)) ])
-cmap[28] = (153, 51, 51)        # RED
-cmap[35] = (112,2,0)            # NETHERRACK
-cmap[26] = (102,76,51)          # BROWN
 cmap[19] = (127,204,25)         # LIME
-cmap[29] = (25,25,25)           # BLACK
 cmap[25] = (51,76,178)          # BLUE
+cmap[26] = (102,76,51)          # BROWN
+cmap[28] = (153, 51, 51)        # RED
+cmap[29] = (25,25,25)           # BLACK
+cmap[34] = (126,86,49)          # “OBSIDIAN” (wat)
+cmap[35] = (112,2,0)            # NETHERRACK
 
 shade_frac = [180/255, 220/255, 1, 135/255]
 
