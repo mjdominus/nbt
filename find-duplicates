@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+
+from nbt import nbt
+from sys import argv
+from collections import defaultdict
+import argparse
+
+parser = argparse.ArgumentParser(description="Report on which maps cover the same territory")
+parser.add_argument('-a', '--all', action='store_true', help="list all map files (default: only list duplicates")
+parser.add_argument('-i', '--info', action='store_true', help="include position/scale info in output")
+parser.add_argument('mapfiles', nargs='+')
+args = parser.parse_args()
+
+maps = defaultdict(list)
+for mapfile in args.mapfiles:
+    f = nbt(file=mapfile).contents
+    data = f["data"]["data"]
+    scale = data["scale"]
+    xc = data["xCenter"]
+    zc = data["zCenter"]
+    key = f'{xc},{zc},{scale}'
+    maps[key].append(mapfile)
+
+for k, v in maps.items():
+    if args.all or len(v) > 1:
+        if args.info:
+            print(k, end=" ")
+        print(" ".join(v))
+
