@@ -31,6 +31,22 @@ o Treasure maps mess up the output.  You need to identify them somehow
   and omit them, or maybe use them only as a last resort.  How to
   identify them?
 
+  Maybe just if the map has too many brown pixels?  (color=26?)
+  Histogramming the pixels does not take long, there are only 16384 of
+  them.  Then the treasure map could be rendered first so it would be
+  overwritten by better maps later.
+
+  Do this after you build in the automatic sorting feature.
+
+  * According to `histogram`, a typical treasure map has:
+      
+                color count
+                  0   13445
+                 15    2125
+                 26     814
+
+    An ordinary map looks nothing like this.
+
 o Today you had a treasure map that was like a million miles from
   everything else, and the resulting composite map had to be enormous
   to include it.  It took four and a half minutes to write out the

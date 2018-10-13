@@ -1,0 +1,40 @@
+#!/usr/bin/python3
+
+from nbt import nbt
+from sys import argv
+from collections import defaultdict
+import argparse
+parser = argparse.ArgumentParser(description="Histogram pixel colors in minecraft map.dat file")
+parser.add_argument('-T', '--is-treasure-map', action='store_true', help='print nothing, exit successfully if the map appears to be a treasure map')
+parser.add_argument('-B', '--is-blank', action='store_true', help='print nothing, exit successfully if the map is blank')
+parser.add_argument('mapfile')
+args = parser.parse_args()
+    
+histo = defaultdict(int)
+
+colors = nbt(file=args.mapfile).contents["data"]["data"]["colors"]
+pixels = 0
+for c in colors:
+    histo[int(c/4)] += 1
+    pixels += 1
+
+if args.is_treasure_map:
+    blank = histo[0]
+    brown = histo[26] + histo[15]
+    if pixels == blank: exit(1)
+    fraction_brown = brown / (pixels - blank)
+    exit(0 if fraction_brown >= 0.25 else 1)
+
+if args.is_blank:
+    exit(0 if histo[0] == 16384 else 1)
+
+# print histogram
+for c in sorted(histo.keys(),
+                key=lambda k: histo[k],
+                reverse=True):
+    print("%3d %6d" % (c, histo[c]))
+    
+
+    
+
+
